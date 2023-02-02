@@ -34,6 +34,7 @@ function App() {
     const [emailUser, setEmailUser] = useState("");
     const [infoToolText, setInfoToolText] = useState("");
     const [infoToolImageType, setInfoToolImageType] = useState("err");
+    const [isShowUser, setIsShowUser] = useState(false);
 
     // открытие попапов
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -56,6 +57,16 @@ function App() {
     const [isLoadingAddPlace, setIsLoadingPlace] = useState(false)
     const [isLoadingProfile, setIsLoadingProfile] = useState(false)
     const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false)
+
+    // отображение бургера
+    const openMenu = (e) => {
+        e.preventDefault()
+        setIsShowUser(true)
+    };
+    const hideMenu = (e) => {
+        e.preventDefault()
+        setIsShowUser(false)
+    };
 
     // ошибка для InfoTooltip
     function appointErrInfoTool() {
@@ -261,7 +272,8 @@ function App() {
 
         <CurrentUserContext.Provider value={currentUser}>
             <div className="page">
-                <Header emailUser={emailUser} signOut={signOut} />
+                <Header emailUser={emailUser} signOut={signOut} showUser={isShowUser}
+                    openMenu={openMenu} hideMenu={hideMenu} />
 
                 <Routes>
                     <Route path="/" element={

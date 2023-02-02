@@ -1,5 +1,12 @@
 .header__menu {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 30px;
+    padding: 0;
+    width: 100%;
+}
+
+@media screen and (max-width: 640px) {
+    .header__menu {
+        display: block;
+    }
 }
