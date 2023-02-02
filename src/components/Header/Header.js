@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 function Header({ emailUser, signOut }) {
 
-    const [showUser, setShowUser] = useState(true);
+    const [showUser, setShowUser] = useState(false);
 
     const openMenu = (e) => {
         e.preventDefault()
