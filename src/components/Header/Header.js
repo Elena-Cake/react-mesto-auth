@@ -4,18 +4,8 @@ import { Route, Link, Routes } from 'react-router-dom';
 import { useState } from 'react';
 
 
-function Header({ emailUser, signOut }) {
+function Header({ emailUser, signOut, showUser, openMenu, hideMenu }) {
 
-    const [showUser, setShowUser] = useState(false);
-
-    const openMenu = (e) => {
-        e.preventDefault()
-        setShowUser(true)
-    };
-    const hideMenu = (e) => {
-        e.preventDefault()
-        setShowUser(false)
-    };
 
     return (
         <header className="header">
@@ -34,9 +24,9 @@ function Header({ emailUser, signOut }) {
             <div className='header__navbar navbar'>
                 <Routes>
                     <Route path="/sign-up" element={
-                        <Link to={"/sign-in"} className="navbar__text navbar__text_type_link">Войти</Link>} />
+                        <Link to={"/sign-in"} className="navbar__text navbar__text_type_link navbar__login-page">Войти</Link>} />
                     <Route path="/sign-in" element={
-                        <Link to={"/sign-up"} className="navbar__text navbar__text_type_link">Регистрация</Link>} />
+                        <Link to={"/sign-up"} className="navbar__text navbar__text_type_link navbar__login-page">Регистрация</Link>} />
                     <Route path="/" element={
                         <div className={`navbar__main ${showUser ? 'navbar__main_open' : ''}`}>
                             <p className='navbar__text'>{emailUser}</p>

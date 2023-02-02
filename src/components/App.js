@@ -35,6 +35,8 @@ function App() {
     const [infoToolText, setInfoToolText] = useState("");
     const [infoToolImageType, setInfoToolImageType] = useState("err");
 
+    const [showUser, setShowUser] = useState(false);
+
     // открытие попапов
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -56,6 +58,17 @@ function App() {
     const [isLoadingAddPlace, setIsLoadingPlace] = useState(false)
     const [isLoadingProfile, setIsLoadingProfile] = useState(false)
     const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false)
+
+    // бургер
+    const openMenu = (e) => {
+        e.preventDefault()
+        setShowUser(true)
+    };
+    const hideMenu = (e) => {
+        e.preventDefault()
+        setShowUser(false)
+    };
+
 
     // ошибка для InfoTooltip
     function appointErrInfoTool() {
@@ -125,6 +138,7 @@ function App() {
         e.preventDefault();
         localStorage.removeItem("jwt");
         navigate("/sign-in", { replace: false })
+        setShowUser(false)
     }
 
     // загрузка профиля и карточек при старте страницы
@@ -261,7 +275,11 @@ function App() {
 
         <CurrentUserContext.Provider value={currentUser}>
             <div className="page">
-                <Header emailUser={emailUser} signOut={signOut} />
+                <Header emailUser={emailUser}
+                    signOut={signOut}
+                    showUser={showUser}
+                    openMenu={openMenu} hideMenu={hideMenu}
+                />
 
                 <Routes>
                     <Route path="/" element={
