@@ -5,6 +5,13 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 function Main(props) {
     const currentUser = React.useContext(CurrentUserContext);
 
+    const cardsElements = props.cards.map((card) => (
+        <Card key={card._id} card={card}
+            onCardClick={props.onCardClick}
+            onCardLike={props.onCardLike}
+            onCardDelete={props.onCardDelete} />
+    ))
+
     return (
         <main className="main">
             <section className="profile">
@@ -20,12 +27,7 @@ function Main(props) {
                     type="button" aria-label="добавить место"></button>
             </section>
             <section className="elements" aria-label="Фотографии">
-                {props.cards.map((card) => (
-                    <Card key={card._id} card={card}
-                        onCardClick={props.onCardClick}
-                        onCardLike={props.onCardLike}
-                        onCardDelete={props.onCardDelete} />
-                ))}
+                {cardsElements}
             </section>
         </main>
     )

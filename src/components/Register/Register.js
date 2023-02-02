@@ -1,4 +1,4 @@
-import './Register.css' //+form
+
 import { NavLink } from "react-router-dom";
 import AuthForm from '../AuthForm/AuthForm';
 

@@ -33,6 +33,7 @@ function App() {
     const navigate = useNavigate();
     const [emailUser, setEmailUser] = useState("");
     const [infoToolText, setInfoToolText] = useState("");
+    const [infoToolImageType, setInfoToolImageType] = useState("err");
 
     // открытие попапов
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -56,49 +57,56 @@ function App() {
     const [isLoadingProfile, setIsLoadingProfile] = useState(false)
     const [isLoadingConfirmation, setIsLoadingConfirmation] = useState(false)
 
-    // регастрация
-    function handelRegisterClick(password, email) {
+    // ошибка для InfoTooltip
+    function appointErrInfoTool() {
+        setInfoToolText("Что-то пошло не так! Попробуйте ещё раз.")
+        setInfoToolImageType('err')
+    }
+
+    // регистрация
+    function handleRegisterClick(password, email) {
         register({ password, email })
             .then((res) => {
                 if (res) {
                     setIsSignIn(true)
                     setInfoToolText('Вы успешно зарегистрировались!')
-                    navigate('/sign-in', { replace: true })
+                    setInfoToolImageType('ok')
                 }
+            })
+            .then(() => {
+                handleLoginClick(password, email)
             })
             .catch(() => {
                 setIsSignIn(false)
-                setInfoToolText('Что-то пошло не так! Попробуйте ещё раз.')
+                appointErrInfoTool()
             })
             .finally(() => setIsInfoTooltipOpen(true))
     }
 
     // авторизация
-    function handelLoginClick(password, email) {
+    function handleLoginClick(password, email) {
         login({ password, email })
             .then((data) => {
                 localStorage.setItem("jwt", data.token);
                 setIsSignIn(true);
                 setInfoToolText('Успешно!')
+                setInfoToolImageType('ok')
                 navigate('/', { replace: true });
                 setEmailUser(email)
             })
             .catch((res) => {
-                if (res === 'Ошибка 401') {
-                    setIsInfoTooltipOpen(true);
-                    setIsSignIn(false);
-                    setInfoToolText("Пользователь не найден. Проверьте почту и пароль.")
-                } else if (!res) {
-                    setIsSignIn(false)
-                }
+                setIsInfoTooltipOpen(true);
+                setIsSignIn(false);
+                appointErrInfoTool()
             })
             .finally(() => setIsInfoTooltipOpen(true))
     }
 
     // проверка токена
     useEffect(() => {
-        if (localStorage.getItem('jwt')) {
-            checkToken(localStorage.getItem('jwt'))
+        const jwt = localStorage.getItem('jwt')
+        if (jwt) {
+            checkToken(jwt)
                 .then((res) => {
                     if (res) {
                         setIsSignIn(true);
@@ -113,7 +121,7 @@ function App() {
     }, [])
 
     // удаление токена при выходе из аккаунта
-    function clearToken(e) {
+    function signOut(e) {
         e.preventDefault();
         localStorage.removeItem("jwt");
         navigate("/sign-in", { replace: false })
@@ -182,17 +190,6 @@ function App() {
                 .catch((err) => {
                     console.log(err);
                 })
-    }
-
-    // удаление карточки
-    function handleCardDelete(idCard) {
-        api.deleteCard(idCard)
-            .then(() => {
-                setCards((state) => state.filter(card => card._id !== idCard))
-            })
-            .catch((err) => {
-                console.log(err);
-            })
     }
 
     // удаление карточки - нажатие корзины
@@ -264,7 +261,7 @@ function App() {
 
         <CurrentUserContext.Provider value={currentUser}>
             <div className="page">
-                <Header emailUser={emailUser} clearToken={clearToken} />
+                <Header emailUser={emailUser} signOut={signOut} />
 
                 <Routes>
                     <Route path="/" element={
@@ -277,27 +274,47 @@ function App() {
                             onCardDelete={handleCardDelete}
                             cards={cards}
                         />} />
-                    <Route path="/sign-up" element={<Register register={handelRegisterClick} />} />
-                    <Route path="/sign-in" element={<Login login={handelLoginClick} />} />
+                    <Route path="/sign-up" element={<Register register={handleRegisterClick} />} />
+                    <Route path="/sign-in" element={<Login login={handleLoginClick} />} />
                 </Routes>
 
                 <Footer />
 
-                <InfoTooltip isOpen={isInfoTooltipOpen} isSignIn={isSignIn} onClose={closeAllPopups} text={infoToolText} />
+                <InfoTooltip
+                    isOpen={isInfoTooltipOpen}
+                    onClose={closeAllPopups}
+                    isSignIn={isSignIn}
+                    text={infoToolText}
+                    imageType={infoToolImageType} />
 
-                <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}
-                    onUpdateAvatar={handleUpdateAvatar} isLoading={isLoadingAvatar} />
+                <EditAvatarPopup
+                    isOpen={isEditAvatarPopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateAvatar={handleUpdateAvatar}
+                    isLoading={isLoadingAvatar} />
 
-                <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}
-                    onUpdateUser={handleUpdateUser} isLoading={isLoadingProfile} />
+                <EditProfilePopup
+                    isOpen={isEditProfilePopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateUser={handleUpdateUser}
+                    isLoading={isLoadingProfile} />
 
-                <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}
-                    onAddPlace={handleAddPlaceSubmit} isLoading={isLoadingAddPlace} />
+                <AddPlacePopup
+                    isOpen={isAddPlacePopupOpen}
+                    onClose={closeAllPopups}
+                    onAddPlace={handleAddPlaceSubmit}
+                    isLoading={isLoadingAddPlace} />
 
+                <ImagePopup
+                    isOpen={isOpenCardPopup}
+                    onClose={closeAllPopups}
+                    card={selectedCard} />
 
-                <ImagePopup isOpen={isOpenCardPopup} card={selectedCard} onClose={closeAllPopups} />
-                <ConfirmationPopup isOpen={isOpenConfirmationPopup} onClose={closeAllPopups}
-                    onConfirmationSubmit={handleConfirmationDelete} isLoading={isLoadingConfirmation} />
+                <ConfirmationPopup
+                    isOpen={isOpenConfirmationPopup}
+                    onClose={closeAllPopups}
+                    onConfirmationSubmit={handleConfirmationDelete}
+                    isLoading={isLoadingConfirmation} />
             </div>
         </CurrentUserContext.Provider>
     );
