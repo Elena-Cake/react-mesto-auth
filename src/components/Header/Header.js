@@ -3,21 +3,10 @@ import logoPath from '../../images/header_logo.svg';
 import { Route, Link, Routes } from 'react-router-dom';
 import { useState } from 'react';
 
-function MenuIcon() {
-
-    return (
-        <div className='navbar__burger navbar__burger_open'>
-            <div className='navbar__line'></div>
-            <div className='navbar__line'></div>
-            <div className='navbar__line'></div>
-        </div>
-    )
-}
-
 
 function Header({ emailUser, signOut }) {
 
-    const [showUser, setShowUser] = useState(false);
+    const [showUser, setShowUser] = useState(true);
 
     const openMenu = (e) => {
         e.preventDefault()

@@ -1,0 +1,16 @@
+.navbar__main {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 24px;
+    max-height: 0;
+    overflow: hidden;
+    transition: 1s ease max-height;
+}
+
+@media screen and (max-width: 640px) {
+    .navbar__main {
+        grid-template-columns: auto;
+        gap: 0;
+        border-top: 1px solid rgba(84, 84, 84, .7);
+    }
+}
