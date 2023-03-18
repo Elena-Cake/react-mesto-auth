@@ -17,7 +17,7 @@ class Api {
 
     // загрузка данных пользователя
     startPageProfile() {
-        return fetch(`${this._startRequest}/users/me`, {
+        return fetch(`${this._startRequest}users/me`, {
             headers: this._headers,
         })
             .then(this._checkRes)
@@ -25,7 +25,7 @@ class Api {
 
     // запрос карточек с сервера
     startPageCards() {
-        return fetch(`${this._startRequest}/cards`, {
+        return fetch(`${this._startRequest}cards`, {
             headers: this._headers,
         })
             .then(this._checkRes)
@@ -90,9 +90,9 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-54/',
+    baseUrl: 'http://localhost:3000/',
     headers: {
-        authorization: 'b54228be-8e0f-45cf-a3af-cf408891c36e',
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json'
     }
 })

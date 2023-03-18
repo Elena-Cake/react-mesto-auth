@@ -116,6 +116,7 @@ function App() {
     // проверка токена
     useEffect(() => {
         const jwt = localStorage.getItem('jwt')
+        console.log(jwt)
         if (jwt) {
             checkToken(jwt)
                 .then((res) => {
@@ -243,6 +244,7 @@ function App() {
         setIsLoadingAvatar(true)
         api.editUserAvatar(values)
             .then((user) => {
+                console.log(user)
                 setCurrentUser(user)
                 setIsLoadingAvatar(false)
                 closeAllPopups()
